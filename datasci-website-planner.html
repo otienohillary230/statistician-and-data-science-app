@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataSci Website Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0e14;
+    --surface: #12161f;
+    --surface2: #1a1f2e;
+    --surface3: #222840;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --text2: #8a90a8;
+    --text3: #555c78;
+    --accent: #4fffb0;
+    --accent2: #0bff7e;
+    --accent-dim: rgba(79,255,176,0.12);
+    --accent-dim2: rgba(79,255,176,0.05);
+    --purple: #9b7fff;
+    --purple-dim: rgba(155,127,255,0.12);
+    --coral: #ff7b6b;
+    --coral-dim: rgba(255,123,107,0.12);
+    --amber: #ffb347;
+    --amber-dim: rgba(255,179,71,0.12);
+    --blue: #5baaff;
+    --blue-dim: rgba(91,170,255,0.12);
+    --r: 8px;
+    --r2: 14px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* SIDEBAR */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-mark {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--accent);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  .logo-sub {
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 4px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .sidebar-nav { padding: 16px 12px; flex: 1; }
+
+  .nav-section-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    font-family: 'DM Mono', monospace;
+    padding: 8px 12px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--r);
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text2);
+    transition: all 0.15s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--accent-dim); color: var(--accent); }
+
+  .nav-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .tier-badge {
+    margin-left: auto;
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+  }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .export-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #0b0e14;
+    border: none;
+    border-radius: var(--r);
+    padding: 10px 16px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+  .export-btn:hover { background: var(--accent2); transform: translateY(-1px); }
+  .export-btn:active { transform: translateY(0); }
+
+  /* MAIN */
+  .main { flex: 1; overflow-x: hidden; }
+
+  /* VIEWS */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* HOME VIEW */
+  .home-hero {
+    padding: 60px 56px 48px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .home-hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(79,255,176,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    max-width: 600px;
+    margin-bottom: 16px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-subtitle {
+    font-size: 15px;
+    color: var(--text2);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+  }
+
+  .stat-item { text-align: left; }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label { font-size: 12px; color: var(--text3); }
+
+  /* STRUCTURE OVERVIEW */
+  .structure-grid {
+    padding: 40px 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .tier-section { grid-column: span 2; }
+  .tier-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .tier-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+  }
+  .tier-line { flex: 1; height: 1px; background: var(--border); }
+
+  .pages-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .page-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 160px;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .page-card:hover { border-color: var(--border2); transform: translateY(-2px); background: var(--surface2); }
+  .page-card:hover::before { opacity: 1; }
+
+  .page-card.tier-entry::before { background: var(--purple); }
+  .page-card.tier-explore::before { background: var(--accent); }
+  .page-card.tier-trust::before { background: var(--blue); }
+  .page-card.tier-convert::before { background: var(--coral); }
+  .page-card.tier-retain::before { background: var(--amber); }
+
+  .pc-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .pc-desc { font-size: 12px; color: var(--text3); line-height: 1.5; }
+  .pc-cta { font-size: 11px; color: var(--accent); margin-top: 10px; font-family: 'DM Mono', monospace; }
+
+  /* PAGE DETAIL VIEW */
+  .page-detail-header {
+    padding: 48px 56px 36px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text3);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    padding: 0;
+    margin-bottom: 20px;
+    transition: color 0.15s;
+  }
+  .back-btn:hover { color: var(--text2); }
+
+  .pdh-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .pdh-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+
+  .pdh-purpose {
+    font-size: 15px;
+    color: var(--text2);
+    max-width: 640px;
+    line-height: 1.7;
+  }
+
+  .pdh-meta {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .meta-badge {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    padding: 5px 12px;
+    border-radius: 99px;
+    border: 1px solid var(--border2);
+    color: var(--text2);
+  }
+
+  .meta-badge.priority-high { border-color: rgba(255,123,107,0.4); color: var(--coral); background: var(--coral-dim); }
+  .meta-badge.priority-med { border-color: rgba(255,179,71,0.4); color: var(--amber); background: var(--amber-dim); }
+  .meta-badge.priority-low { border-color: rgba(79,255,176,0.3); color: var(--accent); background: var(--accent-dim2); }
+
+  .page-detail-body {
+    padding: 40px 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .detail-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 24px;
+  }
+
+  .detail-card.full { grid-column: span 2; }
+
+  .dc-label {
+    font-size: 10px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 16px;
+  }
+
+  .section-list { list-style: none; }
+  .section-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .section-list li:last-child { border-bottom: none; }
+  .section-list li::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+
+  .copy-example {
+    background: var(--surface2);
+    border-radius: var(--r);
+    padding: 16px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+    border-left: 2px solid var(--accent);
+    font-style: italic;
+  }
+
+  .cta-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .cta-chip {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid rgba(79,255,176,0.2);
+    border-radius: 99px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .conversion-meter {
+    margin-top: 8px;
+  }
+  .cm-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .cm-label { font-size: 12px; color: var(--text2); width: 100px; flex-shrink: 0; }
+  .cm-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--surface3);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .cm-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+  }
+  .cm-val { font-size: 12px; color: var(--text3); width: 32px; text-align: right; font-family: 'DM Mono', monospace; }
+
+  /* STRATEGY VIEW */
+  .strategy-section {
+    padding: 48px 56px;
+  }
+  .strategy-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .strategy-intro {
+    font-size: 14px;
+    color: var(--text2);
+    max-width: 580px;
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .segment-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 40px; }
+
+  .segment-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 24px;
+    transition: border-color 0.2s;
+  }
+  .segment-card:hover { border-color: var(--border2); }
+
+  .sc-icon { font-size: 28px; margin-bottom: 14px; }
+  .sc-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .sc-desc { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 14px; }
+  .sc-lands {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--text3);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .sc-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+  .sc-tag {
+    font-size: 11px;
+    background: var(--surface2);
+    border-radius: 4px;
+    padding: 3px 8px;
+    color: var(--text3);
+    border: 1px solid var(--border);
+  }
+
+  .seo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .seo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 20px;
+  }
+  .seo-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+  .seo-list { list-style: none; }
+  .seo-list li {
+    font-size: 12px;
+    color: var(--text2);
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+  }
+  .seo-list li:last-child { border-bottom: none; }
+  .seo-vol {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  /* ROADMAP VIEW */
+  .roadmap-section { padding: 48px 56px; }
+  .roadmap-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  .roadmap-intro { font-size: 14px; color: var(--text2); line-height: 1.7; margin-bottom: 36px; max-width: 580px; }
+
+  .phase-timeline { position: relative; }
+  .phase-timeline::before {
+    content: '';
+    position: absolute;
+    left: 19px;
+    top: 24px;
+    bottom: 0;
+    width: 1px;
+    background: var(--border2);
+  }
+
+  .phase-item { display: flex; gap: 24px; margin-bottom: 32px; }
+  .phase-dot {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .phase-dot.p1 { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(155,127,255,0.3); }
+  .phase-dot.p2 { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(79,255,176,0.3); }
+  .phase-dot.p3 { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,170,255,0.3); }
+  .phase-dot.p4 { background: var(--coral-dim); color: var(--coral); border: 1px solid rgba(255,123,107,0.3); }
+
+  .phase-content { flex: 1; padding-top: 6px; }
+  .phase-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .phase-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .phase-desc { font-size: 13px; color: var(--text2); line-height: 1.6; margin-bottom: 12px; }
+  .phase-pages { display: flex; flex-wrap: wrap; gap: 6px; }
+  .phase-page {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 10px;
+    color: var(--text3);
+  }
+
+  /* EXPORT MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--r2);
+    padding: 32px;
+    width: 480px;
+    max-width: 90vw;
+  }
+  .modal h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .modal p { font-size: 13px; color: var(--text2); margin-bottom: 20px; line-height: 1.6; }
+  .modal-code {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text2);
+    overflow: auto;
+    max-height: 200px;
+    margin-bottom: 20px;
+    white-space: pre;
+    line-height: 1.7;
+  }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+  .modal-close {
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 9px 18px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .modal-copy {
+    background: var(--accent);
+    color: #0b0e14;
+    border: none;
+    border-radius: var(--r);
+    padding: 9px 18px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .modal-copy:hover { background: var(--accent2); }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-up { animation: fadeUp 0.4s ease both; }
+  .delay-1 { animation-delay: 0.05s; }
+  .delay-2 { animation-delay: 0.1s; }
+  .delay-3 { animation-delay: 0.15s; }
+  .delay-4 { animation-delay: 0.2s; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">DataSci<br>Planner</div>
+      <div class="logo-sub">Website Blueprint</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Views</div>
+      <button class="nav-item active" onclick="showView('overview')">
+        <div class="nav-dot" style="background:var(--accent)"></div>
+        Overview
+      </button>
+      <button class="nav-item" onclick="showView('strategy')">
+        <div class="nav-dot" style="background:var(--purple)"></div>
+        Audience Strategy
+      </button>
+      <button class="nav-item" onclick="showView('roadmap')">
+        <div class="nav-dot" style="background:var(--blue)"></div>
+        Build Roadmap
+      </button>
+
+      <div class="nav-section-label" style="margin-top:16px">Pages</div>
+      <button class="nav-item" onclick="showPageDetail('home')">
+        <div class="nav-dot" style="background:var(--purple)"></div>
+        Home / Landing
+        <span class="tier-badge">Entry</span>
+      </button>
+      <button class="nav-item" onclick="showPageDetail('solutions')">
+        <div class="nav-dot" style="background:var(--accent)"></div>
+        Solutions
+        <span class="tier-badge">Explore</span>
+      </button>
+      <button class="nav-item" onclick="showPageDetail('courses')">
+        <div class="nav-dot" style="background:var(--accent)"></div>
+        Courses
+        <span class="tier-badge">Explore</span>
+      </button>
+      <button class="nav-item" onclick="showPageDetail('tools')">
+        <div class="nav-dot" style="background:var(--accent)"></div>
+        Tools & Templates
+        <span class="tier-badge">Explore</span>
+      </button>
+      <button class="nav-item" onclick="showPageDetail('blog')">
+        <div class="nav-dot" style="background:var(--blue)"></div>
+        Blog / Insights
+        <span class="tier-badge">Trust</span>
+      </button>
+      <button class="nav-item" onclick="showPageDetail('casestudies')">
+        <div class="nav-dot" style="background:var(--blue)"></div>
+        Case Studies
+        <span class="tier-badge">Trust</span>
+      </button>
+      <button class="nav-item" onclick="showPageDetail('pricing')">
+        <div class="nav-dot" style="background:var(--coral)"></div>
+        Pricing
+        <span class="tier-badge">Convert</span>
+      </button>
+      <button class="nav-item" onclick="showPageDetail('demo')">
+        <div class="nav-dot" style="background:var(--coral)"></div>
+        Book a Demo
+        <span class="tier-badge">Convert</span>
+      </button>
+      <button class="nav-item" onclick="showPageDetail('dashboard')">
+        <div class="nav-dot" style="background:var(--amber)"></div>
+        Dashboard
+        <span class="tier-badge">Retain</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="export-btn" onclick="openExport()">Export Blueprint →</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- OVERVIEW VIEW -->
+    <div id="view-overview" class="view active">
+      <div class="home-hero fade-up">
+        <div class="hero-eyebrow">High-Converting Blueprint</div>
+        <h1 class="hero-title">Your <em>data science</em> website, structured to convert.</h1>
+        <p class="hero-subtitle">A full site architecture built for statisticians, data scientists, and analysts. Every page has a job. Click any card to explore the full brief for that page.</p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-num">14</div>
+            <div class="stat-label">Page blueprints</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">5</div>
+            <div class="stat-label">Conversion tiers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Audience segments</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="structure-grid">
+        <!-- Entry -->
+        <div class="tier-section fade-up delay-1">
+          <div class="tier-header">
+            <div class="tier-name" style="color:var(--purple)">Entry layer</div>
+            <div class="tier-line"></div>
+          </div>
+          <div class="pages-row">
+            <div class="page-card tier-entry" onclick="showPageDetail('home')">
+              <div class="pc-name">Home / Landing</div>
+              <div class="pc-desc">Primary conversion page. Segments visitors within 3 seconds.</div>
+              <div class="pc-cta">9 sections →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Explore -->
+        <div class="tier-section fade-up delay-2">
+          <div class="tier-header">
+            <div class="tier-name" style="color:var(--accent)">Explore layer</div>
+            <div class="tier-line"></div>
+          </div>
+          <div class="pages-row">
+            <div class="page-card tier-explore" onclick="showPageDetail('solutions')">
+              <div class="pc-name">Solutions</div>
+              <div class="pc-desc">Segment by role and industry vertical.</div>
+              <div class="pc-cta">5 sections →</div>
+            </div>
+            <div class="page-card tier-explore" onclick="showPageDetail('courses')">
+              <div class="pc-name">Courses & Learning</div>
+              <div class="pc-desc">Skill tracks from beginner to expert.</div>
+              <div class="pc-cta">6 sections →</div>
+            </div>
+            <div class="page-card tier-explore" onclick="showPageDetail('tools')">
+              <div class="pc-name">Tools & Templates</div>
+              <div class="pc-desc">Lead magnet hub with email gate.</div>
+              <div class="pc-cta">5 sections →</div>
+            </div>
+            <div class="page-card tier-explore" onclick="showPageDetail('community')">
+              <div class="pc-name">Community</div>
+              <div class="pc-desc">Forums, challenges, mentorship matching.</div>
+              <div class="pc-cta">5 sections →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trust -->
+        <div class="tier-section fade-up delay-3">
+          <div class="tier-header">
+            <div class="tier-name" style="color:var(--blue)">Trust layer</div>
+            <div class="tier-line"></div>
+          </div>
+          <div class="pages-row">
+            <div class="page-card tier-trust" onclick="showPageDetail('casestudies')">
+              <div class="pc-name">Case Studies</div>
+              <div class="pc-desc">Quantified outcomes from real users.</div>
+              <div class="pc-cta">5 sections →</div>
+            </div>
+            <div class="page-card tier-trust" onclick="showPageDetail('blog')">
+              <div class="pc-name">Blog / Insights</div>
+              <div class="pc-desc">SEO engine and thought-leadership.</div>
+              <div class="pc-cta">5 sections →</div>
+            </div>
+            <div class="page-card tier-trust" onclick="showPageDetail('about')">
+              <div class="pc-name">About & Team</div>
+              <div class="pc-desc">Credentials, advisors, press mentions.</div>
+              <div class="pc-cta">5 sections →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Convert -->
+        <div class="tier-section fade-up delay-4">
+          <div class="tier-header">
+            <div class="tier-name" style="color:var(--coral)">Conversion layer</div>
+            <div class="tier-line"></div>
+          </div>
+          <div class="pages-row">
+            <div class="page-card tier-convert" onclick="showPageDetail('pricing')">
+              <div class="pc-name">Pricing</div>
+              <div class="pc-desc">3-tier layout with inline objection handling.</div>
+              <div class="pc-cta">6 sections →</div>
+            </div>
+            <div class="page-card tier-convert" onclick="showPageDetail('demo')">
+              <div class="pc-name">Book a Demo</div>
+              <div class="pc-desc">Enterprise entry point with booking widget.</div>
+              <div class="pc-cta">5 sections →</div>
+            </div>
+            <div class="page-card tier-convert" onclick="showPageDetail('freetrial')">
+              <div class="pc-name">Free Trial</div>
+              <div class="pc-desc">Lowest-friction signup, no credit card.</div>
+              <div class="pc-cta">5 sections →</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Retain -->
+        <div class="tier-section fade-up delay-4">
+          <div class="tier-header">
+            <div class="tier-name" style="color:var(--amber)">Retention layer</div>
+            <div class="tier-line"></div>
+          </div>
+          <div class="pages-row">
+            <div class="page-card tier-retain" onclick="showPageDetail('dashboard')">
+              <div class="pc-name">Member Dashboard</div>
+              <div class="pc-desc">Progress tracking, recommendations, upgrade nudges.</div>
+              <div class="pc-cta">6 sections →</div>
+            </div>
+            <div class="page-card tier-retain" onclick="showPageDetail('docs')">
+              <div class="pc-name">Docs & Help Center</div>
+              <div class="pc-desc">Reduces support load, captures long-tail SEO.</div>
+              <div class="pc-cta">5 sections →</div>
+            </div>
+            <div class="page-card tier-retain" onclick="showPageDetail('newsletter')">
+              <div class="pc-name">Newsletter</div>
+              <div class="pc-desc">Email nurture with lead-magnet incentive.</div>
+              <div class="pc-cta">4 sections →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE DETAIL VIEW -->
+    <div id="view-pagedetail" class="view">
+      <div class="page-detail-header">
+        <button class="back-btn" onclick="showView('overview')">← Back to overview</button>
+        <div class="pdh-eyebrow" id="pdh-tier"></div>
+        <h2 class="pdh-title" id="pdh-title"></h2>
+        <p class="pdh-purpose" id="pdh-purpose"></p>
+        <div class="pdh-meta" id="pdh-meta"></div>
+      </div>
+      <div class="page-detail-body" id="pdh-body"></div>
+    </div>
+
+    <!-- STRATEGY VIEW -->
+    <div id="view-strategy" class="view">
+      <div class="strategy-section">
+        <h2>Audience Strategy</h2>
+        <p class="strategy-intro">Three distinct segments visit your site with different goals, different objections, and different conversion triggers. Each needs a tailored path.</p>
+
+        <div class="segment-cards">
+          <div class="segment-card">
+            <div class="sc-icon">🎓</div>
+            <div class="sc-title">Students & Early-Career</div>
+            <div class="sc-desc">Driven by career ROI, credential value, and free resources. Price-sensitive. Need social proof from peers who got jobs.</div>
+            <div class="sc-lands">Best landing pages</div>
+            <div class="sc-tags">
+              <span class="sc-tag">Courses</span>
+              <span class="sc-tag">Tools</span>
+              <span class="sc-tag">Free Trial</span>
+              <span class="sc-tag">Blog</span>
+            </div>
+          </div>
+          <div class="segment-card">
+            <div class="sc-icon">💼</div>
+            <div class="sc-title">Working Professionals</div>
+            <div class="sc-desc">Driven by time-to-value, peer validation, and industry-specific outcomes. Want proof it works in their domain.</div>
+            <div class="sc-lands">Best landing pages</div>
+            <div class="sc-tags">
+              <span class="sc-tag">Solutions</span>
+              <span class="sc-tag">Case Studies</span>
+              <span class="sc-tag">Pricing</span>
+            </div>
+          </div>
+          <div class="segment-card">
+            <div class="sc-icon">🏢</div>
+            <div class="sc-title">Enterprise & Research Teams</div>
+            <div class="sc-desc">Driven by credibility, compliance, and scale. Need to justify spend to others. Multi-stakeholder buying process.</div>
+            <div class="sc-lands">Best landing pages</div>
+            <div class="sc-tags">
+              <span class="sc-tag">About</span>
+              <span class="sc-tag">Case Studies</span>
+              <span class="sc-tag">Demo</span>
+              <span class="sc-tag">Solutions</span>
+            </div>
+          </div>
+        </div>
+
+        <h2 style="margin-bottom:8px;margin-top:8px">SEO Keyword Strategy</h2>
+        <p class="strategy-intro">These are the highest-value search intent clusters for data science and statistics platforms.</p>
+
+        <div class="seo-grid">
+          <div class="seo-card">
+            <div class="seo-title">How-to tutorials (blog)</div>
+            <ul class="seo-list">
+              <li>how to perform logistic regression in R <span class="seo-vol">↑ High</span></li>
+              <li>python statsmodels tutorial <span class="seo-vol">↑ High</span></li>
+              <li>bayesian A/B testing explained <span class="seo-vol">Med</span></li>
+              <li>sample size calculation guide <span class="seo-vol">↑ High</span></li>
+              <li>time series forecasting python <span class="seo-vol">↑ High</span></li>
+            </ul>
+          </div>
+          <div class="seo-card">
+            <div class="seo-title">Tools & calculators (Tools page)</div>
+            <ul class="seo-list">
+              <li>sample size calculator online <span class="seo-vol">↑ High</span></li>
+              <li>power analysis tool free <span class="seo-vol">Med</span></li>
+              <li>chi-square test calculator <span class="seo-vol">Med</span></li>
+              <li>confidence interval calculator <span class="seo-vol">↑ High</span></li>
+              <li>R cheat sheet PDF <span class="seo-vol">Med</span></li>
+            </ul>
+          </div>
+          <div class="seo-card">
+            <div class="seo-title">Learning & courses</div>
+            <ul class="seo-list">
+              <li>best data science courses 2025 <span class="seo-vol">↑ High</span></li>
+              <li>statistics for data science course <span class="seo-vol">↑ High</span></li>
+              <li>learn machine learning online <span class="seo-vol">↑ High</span></li>
+              <li>causal inference course <span class="seo-vol">Med</span></li>
+              <li>data analyst certification <span class="seo-vol">↑ High</span></li>
+            </ul>
+          </div>
+          <div class="seo-card">
+            <div class="seo-title">Comparison & alternative (high intent)</div>
+            <ul class="seo-list">
+              <li>datacamp vs coursera data science <span class="seo-vol">Med</span></li>
+              <li>best platform for learning statistics <span class="seo-vol">Med</span></li>
+              <li>python vs R for statistics <span class="seo-vol">↑ High</span></li>
+              <li>free data science resources <span class="seo-vol">↑ High</span></li>
+              <li>statistician career path 2025 <span class="seo-vol">Med</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROADMAP VIEW -->
+    <div id="view-roadmap" class="view">
+      <div class="roadmap-section">
+        <h2>Build Roadmap</h2>
+        <p class="roadmap-intro">A phased build plan that gets you to revenue as fast as possible, then iterates. Don't build everything at once — phase by conversion priority.</p>
+
+        <div class="phase-timeline">
+          <div class="phase-item">
+            <div class="phase-dot p1">01</div>
+            <div class="phase-content">
+              <div class="phase-label">Weeks 1–3 · Foundation</div>
+              <div class="phase-title">Core conversion loop</div>
+              <div class="phase-desc">The minimum viable site. Home page, a single Courses page, Pricing, and Free Trial. Enough to take payments and test messaging. Everything else is iteration.</div>
+              <div class="phase-pages">
+                <span class="phase-page">Home</span>
+                <span class="phase-page">Pricing</span>
+                <span class="phase-page">Free Trial</span>
+                <span class="phase-page">One Course page</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="phase-item">
+            <div class="phase-dot p2">02</div>
+            <div class="phase-content">
+              <div class="phase-label">Weeks 4–6 · Credibility</div>
+              <div class="phase-title">Trust and organic growth</div>
+              <div class="phase-desc">Add the trust layer. Blog starts building SEO from day one — compound returns over months. Case Studies close enterprise deals that Pricing alone can't.</div>
+              <div class="phase-pages">
+                <span class="phase-page">Blog (first 5 posts)</span>
+                <span class="phase-page">Case Studies</span>
+                <span class="phase-page">About & Team</span>
+                <span class="phase-page">Tools page</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="phase-item">
+            <div class="phase-dot p3">03</div>
+            <div class="phase-content">
+              <div class="phase-label">Weeks 7–10 · Scale</div>
+              <div class="phase-title">Segment and retain</div>
+              <div class="phase-desc">Build out the explore layer to segment visitors better. Launch community for retention and UGC. Add Book a Demo for enterprise pipeline.</div>
+              <div class="phase-pages">
+                <span class="phase-page">Solutions</span>
+                <span class="phase-page">Community</span>
+                <span class="phase-page">Book a Demo</span>
+                <span class="phase-page">Newsletter</span>
+                <span class="phase-page">Member Dashboard</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="phase-item">
+            <div class="phase-dot p4">04</div>
+            <div class="phase-content">
+              <div class="phase-label">Weeks 11+ · Optimise</div>
+              <div class="phase-title">Conversion rate optimisation</div>
+              <div class="phase-desc">Now you have data. A/B test landing page headlines, CTAs, and pricing tiers. Build Docs centre, expand course catalog, and run community events.</div>
+              <div class="phase-pages">
+                <span class="phase-page">A/B test Home hero</span>
+                <span class="phase-page">Docs & Help</span>
+                <span class="phase-page">Testimonials page</span>
+                <span class="phase-page">Expand Blog</span>
+                <span class="phase-page">Affiliate / referral</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- EXPORT MODAL -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h3>Export Blueprint</h3>
+    <p>Copy this JSON structure to share with your development team, agency, or use as a brief for your website project.</p>
+    <div class="modal-code" id="export-code"></div>
+    <div class="modal-actions">
+      <button class="modal-close" onclick="closeExport()">Close</button>
+      <button class="modal-copy" onclick="copyExport()">Copy JSON</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const pages = {
+  home: {
+    tier: 'Entry Layer',
+    title: 'Home / Landing Page',
+    purpose: 'The primary conversion page. Must communicate value within 3 seconds and route each visitor segment to the right next step.',
+    priority: 'high',
+    conversionImpact: 95,
+    seoImpact: 60,
+    retentionImpact: 40,
+    sections: [
+      'Hero headline with bold value proposition',
+      'Three-bullet value prop (fast scan for busy professionals)',
+      'Social proof bar — recognisable logos of clients or partners',
+      'Feature highlights segmented by visitor type',
+      'Segment CTAs: student / professional / enterprise track',
+      'Testimonial strip with photos and roles',
+      'Free resource lead magnet (stats cheat sheet or calculator)',
+      'Pricing teaser with lowest plan visible',
+      'Final CTA with urgency or scarcity framing'
+    ],
+    copyExample: '"Turn raw data into published insights — faster than your team thought possible. Used by 14,000 statisticians at 200+ research institutions."',
+    ctas: ['Start free', 'See courses', 'Book a demo', 'Get the cheat sheet'],
+    tipsLabel: 'Conversion tips for this audience',
+    tips: [
+      'Lead with outcomes, not features — "Publish your first paper faster" beats "Advanced statistical tools"',
+      'Show university / institution logos in the social proof bar — academics weight institutional credibility highly',
+      'Include a free tool or calculator in the hero fold — this segment expects free value upfront before paying',
+      'Avoid jargon in the headline; let the feature section go deep'
+    ]
+  },
+  solutions: {
+    tier: 'Explore Layer',
+    title: 'Solutions Page',
+    purpose: 'Segment visitors by role and show tailored outcomes. Prevents the homepage from having to serve everyone — each segment gets a relevant "this is for me" moment.',
+    priority: 'med',
+    conversionImpact: 72,
+    seoImpact: 55,
+    retentionImpact: 30,
+    sections: [
+      'Role-based navigation tabs (Data Scientist / Statistician / Analyst / Researcher / Team)',
+      'Problem → solution mapping per role',
+      'Industry verticals: finance, healthcare, academia, tech',
+      'Relevant case study links per segment',
+      'Role-specific CTA (sign up / book demo / download resource)'
+    ],
+    copyExample: '"Whether you\'re running clinical trials or building recommendation systems, your workflow starts here."',
+    ctas: ['I\'m a researcher', 'I\'m a data scientist', 'My team needs this'],
+    tipsLabel: 'Segmentation tips',
+    tips: [
+      'Use URL parameters (?for=researcher) so you can run targeted ad campaigns that land on a pre-filtered view',
+      'The industry vertical section alone justifies this page — "financial risk modelling" is more compelling than "data science for finance"',
+      'Include a 2-minute video per role — this audience values depth and technical credibility'
+    ]
+  },
+  courses: {
+    tier: 'Explore Layer',
+    title: 'Courses & Learning',
+    purpose: 'The core product page for educational offerings. Must show curriculum depth, instructor credibility, and learning outcomes clearly enough to justify enrollment.',
+    priority: 'high',
+    conversionImpact: 85,
+    seoImpact: 75,
+    retentionImpact: 80,
+    sections: [
+      'Skill tracks displayed as learning paths (not just a list)',
+      'Course catalog with filters: topic, level, language, duration',
+      'Sample lesson preview — 2–3 minute free clip',
+      'Instructor profiles with credentials (PhD, industry experience)',
+      'Completion certificates with shareable badges',
+      'Enroll CTA and start-free option on each course card'
+    ],
+    copyExample: '"From p-values to production ML — structured tracks built by the people who teach at LSE, MIT, and Johns Hopkins."',
+    ctas: ['Enroll free', 'Preview this course', 'View full curriculum', 'Compare plans'],
+    tipsLabel: 'Course page best practices',
+    tips: [
+      'Show estimated time-to-completion on every course — this audience plans carefully',
+      'Include a curriculum outline (accordion) — technical buyers will read every module before enrolling',
+      'Peer reviews from real learners with their job title and company convert significantly better than star ratings alone'
+    ]
+  },
+  tools: {
+    tier: 'Explore Layer',
+    title: 'Tools & Templates',
+    purpose: 'Your highest-ROI lead generation page. Statisticians and data scientists actively search for specific calculators and templates. Free tools build habitual return visits.',
+    priority: 'high',
+    conversionImpact: 70,
+    seoImpact: 90,
+    retentionImpact: 65,
+    sections: [
+      'Statistical calculators: sample size, power analysis, confidence intervals, chi-square, Bayes factor',
+      'R and Python code templates — downloadable, annotated',
+      'Curated dataset library with metadata',
+      'Cheat sheets as PDF downloads (email gate on premium ones)',
+      'Light email gate: one field, instant delivery'
+    ],
+    copyExample: '"Free tools used by 40,000 researchers every month. No signup required for the basics."',
+    ctas: ['Download free', 'Get the R cheat sheet', 'Run the calculator'],
+    tipsLabel: 'Lead magnet tips',
+    tips: [
+      'Gate the premium items (datasets >10k rows, full template packs, annotated code repos) behind email — not the basic calculators',
+      'Build a sample size calculator and rank for "sample size calculator" — it gets 40k+ searches/month globally',
+      'Show a "recently downloaded" counter for social proof on each resource'
+    ]
+  },
+  blog: {
+    tier: 'Trust Layer',
+    title: 'Blog / Insights',
+    purpose: 'The primary SEO and thought-leadership engine. Attracts practitioners at the exact moment they are searching for techniques — before they know they need a platform.',
+    priority: 'high',
+    conversionImpact: 55,
+    seoImpact: 95,
+    retentionImpact: 50,
+    sections: [
+      'Topic clusters: ML, classical stats, data visualisation, career, Python/R',
+      'Author bylines with photo, title, and credentials',
+      'In-article CTAs to the most relevant course or tool (contextual, not generic)',
+      'Related posts sidebar — keeps readers in the funnel',
+      'Newsletter subscribe prompt at end of every post'
+    ],
+    copyExample: '"How to interpret a ROC curve — and when accuracy is the wrong metric entirely."',
+    ctas: ['Read more', 'Try it yourself', 'Take the full course', 'Subscribe for weekly posts'],
+    tipsLabel: 'Content strategy for this niche',
+    tips: [
+      'Target long-tail "how to" keywords — "how to run a mixed-effects model in R" — low competition, very high intent',
+      'Technical tutorials with runnable code get shared heavily in the data science community (Twitter/X, LinkedIn, Reddit r/statistics)',
+      'Pillar posts (3000+ words) on core topics ("The complete guide to A/B testing") build authority and rank for many sub-keywords'
+    ]
+  },
+  casestudies: {
+    tier: 'Trust Layer',
+    title: 'Case Studies',
+    purpose: 'The single highest-converting trust asset. Quantified outcomes from recognisable contexts eliminate objections that no amount of copywriting can overcome.',
+    priority: 'high',
+    conversionImpact: 88,
+    seoImpact: 40,
+    retentionImpact: 25,
+    sections: [
+      'Industry filter: academia, biotech, finance, tech, government',
+      'Structured format: problem / approach / result with hard numbers',
+      'Quantified outcomes ("reduced analysis time by 60%", "published 3 papers in 12 months")',
+      'Embedded pull-quote from a named, credentialed person',
+      'CTA to the course or tool that delivered the result'
+    ],
+    copyExample: '"Dr. Amara Osei cut her clinical trial analysis time from 6 weeks to 4 days using the causal inference track."',
+    ctas: ['Read the full story', 'Try the same approach', 'Book a demo for my team'],
+    tipsLabel: 'Case study tips',
+    tips: [
+      'Always use real names and real institutions — "a leading UK university" converts at a fraction of "Dr. Chen at UCL"',
+      'Video testimonials convert 3–4× better than written ones — 90 seconds is the sweet spot',
+      'Show the "before state" clearly — readers need to see themselves in the problem'
+    ]
+  },
+  about: {
+    tier: 'Trust Layer',
+    title: 'About & Team',
+    purpose: 'Converts visitors doing final due diligence — academics verifying credentials, enterprise buyers building a business case, and professionals checking if this is peer-built.',
+    priority: 'med',
+    conversionImpact: 60,
+    seoImpact: 30,
+    retentionImpact: 20,
+    sections: [
+      'Founding story with specific, credible origin (not vague mission-speak)',
+      'Team grid with names, photos, academic credentials, and prior roles',
+      'Advisory board — recognisable names from academia or industry',
+      'Institutional partners and press coverage with logos',
+      'Impact numbers: learners taught, papers published, datasets shared'
+    ],
+    copyExample: '"Built by practicing statisticians who were tired of tools built by engineers who\'d never cleaned a dataset."',
+    ctas: ['Meet the team', 'Read our research', 'Partner with us'],
+    tipsLabel: 'Credibility signals for this audience',
+    tips: [
+      'PhD credentials shown on team cards matter significantly to the academic segment — they distinguish you from generic edtech',
+      'List former employers (Google, Oxford, NIH) in team bios — practitioners trust peers from recognisable institutions',
+      'Include a specific "Why we built this" founder story, not a generic mission statement'
+    ]
+  },
+  pricing: {
+    tier: 'Conversion Layer',
+    title: 'Pricing Page',
+    purpose: 'The most-visited pre-conversion page. Must make the right tier obvious, handle objections inline, and give all three segments a clear path without confusion.',
+    priority: 'high',
+    conversionImpact: 92,
+    seoImpact: 20,
+    retentionImpact: 15,
+    sections: [
+      'Three-tier layout: Free / Pro / Team — no more, no fewer',
+      'Annual vs monthly toggle (show annual savings prominently)',
+      'Feature comparison table — scannable, with tooltip explanations on each row',
+      'Inline FAQ that addresses the top 5 objections (no contract, data privacy, cancel anytime)',
+      'Money-back guarantee badge visible above the fold',
+      'Enterprise contact CTA for organisations that need custom terms'
+    ],
+    copyExample: '"Pro is $29/month. Cancel any time. Your data is yours — we never sell it, ever."',
+    ctas: ['Start free', 'Upgrade to Pro', 'Contact for Team pricing', 'See what\'s included'],
+    tipsLabel: 'Pricing page optimisation',
+    tips: [
+      'The free tier must be genuinely useful — this audience will test it thoroughly and churn instantly if it feels crippled',
+      'Show annual pricing by default with the monthly price visible — anchors higher, reduces sticker shock',
+      'Add a "Most popular" badge to Pro — removes decision paralysis without forcing it'
+    ]
+  },
+  demo: {
+    tier: 'Conversion Layer',
+    title: 'Book a Demo',
+    purpose: 'High-intent entry point for enterprise and research team buyers who need a guided experience before committing budget.',
+    priority: 'med',
+    conversionImpact: 78,
+    seoImpact: 15,
+    retentionImpact: 20,
+    sections: [
+      'Inline booking widget (Calendly or equivalent) — no redirect',
+      '"What you\'ll see in the demo" section — sets expectations and increases show-rate',
+      'Logo strip of enterprise clients who started with a demo',
+      'Short pre-qualification form: name, organisation, team size, primary use case',
+      'Confirmation email with prep materials and agenda'
+    ],
+    copyExample: '"30 minutes. We\'ll show you exactly how [Your Institution] would use the platform — with your data, your workflows."',
+    ctas: ['Pick a time', 'Schedule now', 'Talk to a human'],
+    tipsLabel: 'Demo conversion tips',
+    tips: [
+      'Pre-qualify with a use case field — it lets your team personalise the demo and improves close rate dramatically',
+      'Show demo show-rate ("94% of booked demos run on time") — reduces no-shows',
+      'Send a prep email 24 hours before with 3 questions to think about — increases engagement and deal velocity'
+    ]
+  },
+  freetrial: {
+    tier: 'Conversion Layer',
+    title: 'Free Trial / Signup',
+    purpose: 'The lowest-friction conversion step. Every extra field reduces completion rate by ~5%. Optimise ruthlessly.',
+    priority: 'high',
+    conversionImpact: 90,
+    seoImpact: 10,
+    retentionImpact: 70,
+    sections: [
+      'Email-only field or OAuth (Google / GitHub) — no password creation on first step',
+      'Zero credit card requirement — state this clearly above the form',
+      '3-step progress indicator — sets expectation and reduces abandonment',
+      'Immediate access on confirmation — no "check your email" wall',
+      'Welcome checklist shown on first login — drives activation within the first session'
+    ],
+    copyExample: '"Free forever. No credit card. Start in 30 seconds."',
+    ctas: ['Start free', 'Sign up with Google', 'Create account'],
+    tipsLabel: 'Signup optimisation',
+    tips: [
+      'GitHub OAuth converts much higher with a developer/data science audience than email — offer it as the primary option',
+      'Show the welcome checklist on the signup page itself ("Here\'s what you\'ll do first") — sets expectations and reduces drop-off',
+      'Trigger the upgrade nudge at the moment of value realisation, not at day 7 arbitrarily'
+    ]
+  },
+  community: {
+    tier: 'Explore Layer',
+    title: 'Community',
+    purpose: 'The stickiness engine. Peer interaction reduces churn, generates UGC that attracts new users, and creates a network effect moat competitors can\'t copy.',
+    priority: 'med',
+    conversionImpact: 45,
+    seoImpact: 50,
+    retentionImpact: 90,
+    sections: [
+      'Discussion forums segmented by topic (methodology, coding, career)',
+      'Weekly data challenges with public leaderboard',
+      'Member spotlight: featured work from community members',
+      'Live events and webinars calendar',
+      'Mentorship matching for early-career members'
+    ],
+    copyExample: '"14,000 statisticians. Ask a question at 11pm and get a PhD-level answer by midnight."',
+    ctas: ['Join the community', 'Enter this week\'s challenge', 'Find a mentor'],
+    tipsLabel: 'Community building tips',
+    tips: [
+      'Seed the community with invited experts before public launch — cold forums kill communities',
+      'Weekly challenges drive re-engagement better than any email campaign — make them shareable',
+      'Mentorship matching is a strong conversion driver for the student segment — they pay for access to senior practitioners'
+    ]
+  },
+  dashboard: {
+    tier: 'Retention Layer',
+    title: 'Member Dashboard',
+    purpose: 'The retention hub. Creates the habit loop that keeps users returning. Every element should reduce churn and surface the next action.',
+    priority: 'high',
+    conversionImpact: 40,
+    seoImpact: 5,
+    retentionImpact: 95,
+    sections: [
+      'Course progress tracker with visual completion rings',
+      '"Continue where you left off" as the primary CTA',
+      'Recommended next course based on completed work',
+      'Saved tools and template shortcuts',
+      'Community activity feed — new replies, challenge results',
+      'Upgrade prompt for free users at the moment of friction'
+    ],
+    copyExample: '"You\'re 67% through Causal Inference. 3 more lessons to your certificate."',
+    ctas: ['Continue lesson', 'View certificate', 'Upgrade to Pro'],
+    tipsLabel: 'Retention design tips',
+    tips: [
+      'Progress bars increase completion rates by up to 25% — make them prominent, not buried',
+      'Show streak counters (days in a row) — this audience responds well to quantified habits',
+      'Surface the upgrade prompt at the exact moment a free user hits a limit — not on a timer'
+    ]
+  },
+  docs: {
+    tier: 'Retention Layer',
+    title: 'Docs & Help Center',
+    purpose: 'Reduces support ticket volume, improves user success rate, and captures long-tail SEO from specific technical queries.',
+    priority: 'low',
+    conversionImpact: 30,
+    seoImpact: 70,
+    retentionImpact: 55,
+    sections: [
+      'Full-text searchable knowledge base',
+      'Getting started guide (first 15 minutes of value)',
+      'API and integration documentation',
+      'Annotated video walkthroughs for complex workflows',
+      'Ticket submission for issues not resolved by docs'
+    ],
+    copyExample: '"Everything you need to go from install to insight."',
+    ctas: ['Search docs', 'Get started guide', 'Contact support'],
+    tipsLabel: 'Documentation tips',
+    tips: [
+      'Write the getting started guide for the most common use case, not the most impressive one',
+      'Docs pages rank well for "[product name] + tutorial" and "[product name] + how to" — this is long-tail gold',
+      'Add a "Was this helpful?" at the bottom of each article — use the data to prioritise rewrites'
+    ]
+  },
+  newsletter: {
+    tier: 'Retention Layer',
+    title: 'Newsletter / Email Nurture',
+    purpose: 'Email is the highest-ROI re-engagement channel. A well-run newsletter keeps your brand in front of unactivated free users and brings lapsed members back.',
+    priority: 'med',
+    conversionImpact: 50,
+    seoImpact: 15,
+    retentionImpact: 75,
+    sections: [
+      'Dedicated subscribe landing page with sample issue preview',
+      'Archive of past issues — readable without subscribing',
+      'Lead magnet incentive shown upfront (e.g. "The 2025 Statistics Toolkit PDF")',
+      'Unsubscribe and preference centre — reduces spam complaints'
+    ],
+    copyExample: '"One email, every Thursday. The most useful thing a statistician will read this week."',
+    ctas: ['Subscribe free', 'Read a sample issue', 'Get the toolkit'],
+    tipsLabel: 'Newsletter strategy',
+    tips: [
+      'Consistency beats frequency — weekly is better than daily for this audience',
+      'Include one genuinely useful piece of content per issue (a tool, a technique, a paper) — not just platform news',
+      'Segment by plan (free vs pro) and send different upgrade nudges — contextual beats generic'
+    ]
+  }
+};
+
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const map = { overview: 0, strategy: 1, roadmap: 2 };
+  if (map[name] !== undefined) {
+    document.querySelectorAll('.nav-item')[map[name]].classList.add('active');
+  }
+}
+
+function showPageDetail(key) {
+  const p = pages[key];
+  if (!p) return;
+
+  document.getElementById('pdh-tier').textContent = p.tier;
+  document.getElementById('pdh-title').textContent = p.title;
+  document.getElementById('pdh-purpose').textContent = p.purpose;
+
+  const priorityLabel = { high: 'High priority', med: 'Medium priority', low: 'Lower priority' };
+  const priorityClass = { high: 'priority-high', med: 'priority-med', low: 'priority-low' };
+  document.getElementById('pdh-meta').innerHTML =
+    `<span class="meta-badge ${priorityClass[p.priority]}">${priorityLabel[p.priority]}</span>
+     <span class="meta-badge">${p.sections.length} sections</span>
+     <span class="meta-badge">${p.ctas.length} CTA variants</span>`;
+
+  const body = document.getElementById('pdh-body');
+  body.innerHTML = `
+    <div class="detail-card">
+      <div class="dc-label">Page sections</div>
+      <ul class="section-list">${p.sections.map(s => `<li>${s}</li>`).join('')}</ul>
+    </div>
+    <div class="detail-card">
+      <div class="dc-label">Conversion metrics</div>
+      <div class="conversion-meter">
+        <div class="cm-row">
+          <div class="cm-label">Conversion</div>
+          <div class="cm-bar-bg"><div class="cm-bar-fill" style="width:${p.conversionImpact}%;background:var(--coral)"></div></div>
+          <div class="cm-val">${p.conversionImpact}</div>
+        </div>
+        <div class="cm-row">
+          <div class="cm-label">SEO impact</div>
+          <div class="cm-bar-bg"><div class="cm-bar-fill" style="width:${p.seoImpact}%;background:var(--blue)"></div></div>
+          <div class="cm-val">${p.seoImpact}</div>
+        </div>
+        <div class="cm-row">
+          <div class="cm-label">Retention</div>
+          <div class="cm-bar-bg"><div class="cm-bar-fill" style="width:${p.retentionImpact}%;background:var(--accent)"></div></div>
+          <div class="cm-val">${p.retentionImpact}</div>
+        </div>
+      </div>
+      <div class="dc-label" style="margin-top:20px">CTA options</div>
+      <div class="cta-chips">${p.ctas.map(c => `<span class="cta-chip">${c}</span>`).join('')}</div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-label">Sample headline / copy direction</div>
+      <div class="copy-example">${p.copyExample}</div>
+    </div>
+    <div class="detail-card">
+      <div class="dc-label">${p.tipsLabel}</div>
+      <ul class="section-list">${p.tips.map(t => `<li>${t}</li>`).join('')}</ul>
+    </div>
+  `;
+
+  showView('pagedetail');
+}
+
+function openExport() {
+  const blueprint = {
+    project: 'DataSci Website Blueprint',
+    generated: new Date().toISOString().split('T')[0],
+    tiers: ['Entry', 'Explore', 'Trust', 'Conversion', 'Retention'],
+    pages: Object.entries(pages).map(([k, v]) => ({
+      id: k,
+      title: v.title,
+      tier: v.tier,
+      priority: v.priority,
+      sections: v.sections,
+      ctas: v.ctas,
+      metrics: { conversion: v.conversionImpact, seo: v.seoImpact, retention: v.retentionImpact }
+    }))
+  };
+  document.getElementById('export-code').textContent = JSON.stringify(blueprint, null, 2);
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeExport() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function copyExport() {
+  const text = document.getElementById('export-code').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.modal-copy');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy JSON', 2000);
+  });
+}
+
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeExport();
+});
+</script>
+</body>
+</html>
