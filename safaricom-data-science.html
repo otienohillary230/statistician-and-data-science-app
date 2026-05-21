@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safaricom Data Science — Insights for Africa</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green: #4caf50;
+    --green-dark: #1b5e20;
+    --green-mid: #2e7d32;
+    --green-light: #a5d6a7;
+    --green-pale: #e8f5e9;
+    --red: #f44336;
+    --red-light: #ffebee;
+    --white: #ffffff;
+    --off-white: #f9fafb;
+    --text: #0f1c0f;
+    --text-muted: #4a5e4a;
+    --border: rgba(46,125,50,0.18);
+    --card-bg: #ffffff;
+    --tag-bg: #e8f5e9;
+    --tag-color: #1b5e20;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--text);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 5vw;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    color: var(--green-dark);
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .nav-logo .dot { color: var(--red); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-size: 0.875rem; font-weight: 500; color: var(--text-muted);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--green-dark); }
+  .nav-cta {
+    background: var(--green-mid); color: #fff;
+    border: none; border-radius: 6px;
+    padding: 8px 20px; font-size: 0.875rem; font-weight: 500;
+    cursor: pointer; transition: background 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .nav-cta:hover { background: var(--green-dark); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 92vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 80px 5vw;
+    gap: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; right: -10%; top: -20%;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(76,175,80,0.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--tag-bg); color: var(--tag-color);
+    padding: 6px 14px; border-radius: 100px;
+    font-size: 0.8rem; font-weight: 500; margin-bottom: 1.5rem;
+  }
+  .hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 .accent { color: var(--green-mid); }
+  .hero h1 .underline-red {
+    text-decoration: underline;
+    text-decoration-color: var(--red);
+    text-underline-offset: 6px;
+  }
+  .hero-desc {
+    font-size: 1.05rem; color: var(--text-muted);
+    max-width: 480px; margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--green-mid); color: #fff;
+    padding: 13px 28px; border-radius: 8px;
+    font-weight: 500; font-size: 0.95rem;
+    text-decoration: none; transition: background 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--green-dark); }
+  .btn-outline {
+    border: 1.5px solid var(--border); color: var(--text-muted);
+    padding: 13px 28px; border-radius: 8px;
+    font-weight: 500; font-size: 0.95rem;
+    text-decoration: none; transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--green-mid); color: var(--green-mid); }
+
+  /* hero visual */
+  .hero-visual {
+    position: relative;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .stat-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px;
+    display: flex; align-items: center; gap: 16px;
+    animation: floatIn 0.7s ease both;
+  }
+  .stat-card:nth-child(1) { animation-delay: 0.1s; transform: translateX(0); }
+  .stat-card:nth-child(2) { animation-delay: 0.25s; margin-left: 32px; }
+  .stat-card:nth-child(3) { animation-delay: 0.4s; margin-left: 16px; }
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .stat-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; flex-shrink: 0;
+  }
+  .icon-green { background: var(--green-pale); }
+  .icon-red { background: var(--red-light); }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem; font-weight: 800; line-height: 1;
+    color: var(--green-dark);
+  }
+  .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── SECTION SHARED ── */
+  section { padding: 96px 5vw; }
+  .section-label {
+    font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--green-mid); font-weight: 500; margin-bottom: 0.6rem;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 700; line-height: 1.2;
+    letter-spacing: -0.025em;
+    margin-bottom: 1rem;
+  }
+  .section-sub {
+    color: var(--text-muted); max-width: 520px;
+    font-weight: 300; margin-bottom: 3rem;
+  }
+
+  /* ── USE CASES ── */
+  .usecases { background: #fff; }
+  .uc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .uc-card {
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: box-shadow 0.25s, transform 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .uc-card:hover { box-shadow: 0 8px 30px rgba(46,125,50,0.1); transform: translateY(-3px); }
+  .uc-card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+  }
+  .uc-card.c1::before { background: var(--green); }
+  .uc-card.c2::before { background: #ff9800; }
+  .uc-card.c3::before { background: var(--red); }
+  .uc-card.c4::before { background: #2196f3; }
+  .uc-card.c5::before { background: #9c27b0; }
+  .uc-card.c6::before { background: #00bcd4; }
+  .uc-emoji { font-size: 2rem; margin-bottom: 1rem; }
+  .uc-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;
+  }
+  .uc-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── PIPELINE ── */
+  .pipeline { background: var(--off-white); }
+  .pipe-row {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 0; position: relative;
+  }
+  .pipe-row::before {
+    content: '';
+    position: absolute; top: 36px; left: 10%; right: 10%;
+    height: 2px; background: linear-gradient(90deg, var(--green-light), var(--green-mid));
+    z-index: 0;
+  }
+  .pipe-step {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; padding: 0 12px; position: relative; z-index: 1;
+  }
+  .pipe-circle {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: #fff; border: 2px solid var(--green-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; margin-bottom: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .pipe-step:hover .pipe-circle {
+    border-color: var(--green-mid);
+    box-shadow: 0 0 0 6px rgba(76,175,80,0.1);
+  }
+  .pipe-step h4 { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; margin-bottom: 4px; }
+  .pipe-step p { font-size: 0.78rem; color: var(--text-muted); }
+
+  /* ── METRICS ── */
+  .metrics { background: var(--green-dark); color: #fff; }
+  .metrics .section-label { color: var(--green-light); }
+  .metrics .section-title { color: #fff; }
+  .metrics .section-sub { color: rgba(255,255,255,0.6); }
+  .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .metric-tile {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px; padding: 28px 24px;
+    transition: background 0.2s;
+  }
+  .metric-tile:hover { background: rgba(255,255,255,0.12); }
+  .metric-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.6rem; font-weight: 800; line-height: 1;
+    color: var(--green-light); margin-bottom: 6px;
+  }
+  .metric-label { font-size: 0.88rem; color: rgba(255,255,255,0.6); }
+  .metric-change {
+    font-size: 0.78rem; color: var(--green-light);
+    margin-top: 8px; font-weight: 500;
+  }
+
+  /* ── TEAM ── */
+  .team { background: #fff; }
+  .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .team-card {
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    display: flex; gap: 20px; align-items: flex-start;
+    transition: box-shadow 0.2s;
+  }
+  .team-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
+  .avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem;
+    color: #fff;
+  }
+  .av1 { background: #2e7d32; }
+  .av2 { background: #e53935; }
+  .av3 { background: #1976d2; }
+  .av4 { background: #f57c00; }
+  .av5 { background: #6a1b9a; }
+  .av6 { background: #00838f; }
+  .team-name { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+  .team-role { font-size: 0.8rem; color: var(--green-mid); font-weight: 500; margin-bottom: 6px; }
+  .team-bio { font-size: 0.83rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* ── PROJECTS ── */
+  .projects { background: var(--off-white); }
+  .proj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .proj-card {
+    background: #fff; border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .proj-card:hover { box-shadow: 0 10px 32px rgba(0,0,0,0.07); transform: translateY(-2px); }
+  .proj-tag {
+    display: inline-block; padding: 4px 12px; border-radius: 100px;
+    font-size: 0.75rem; font-weight: 500; margin-bottom: 1rem;
+    background: var(--tag-bg); color: var(--tag-color);
+  }
+  .proj-tag.live { background: #e8f5e9; color: #1b5e20; }
+  .proj-tag.research { background: #e3f2fd; color: #0d47a1; }
+  .proj-tag.pilot { background: #fff3e0; color: #e65100; }
+  .proj-card h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .proj-card p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1.2rem; line-height: 1.6; }
+  .proj-stack { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-size: 0.75rem; color: var(--text-muted);
+    background: var(--off-white); border: 1px solid var(--border);
+    border-radius: 100px; padding: 4px 12px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--text); color: rgba(255,255,255,0.7);
+    padding: 60px 5vw 32px;
+  }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+  .footer-brand {
+    font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800;
+    color: #fff; margin-bottom: 0.8rem;
+  }
+  .footer-desc { font-size: 0.85rem; line-height: 1.6; }
+  .footer-col h5 { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .footer-col a { color: rgba(255,255,255,0.65); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--green-light); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 0.8rem; }
+  .badge {
+    background: rgba(76,175,80,0.2); color: var(--green-light);
+    border-radius: 100px; padding: 4px 14px; font-size: 0.78rem; font-weight: 500;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding: 60px 5vw; min-height: auto; }
+    .uc-grid, .pipe-row { grid-template-columns: 1fr 1fr; }
+    .metrics-grid, .team-grid { grid-template-columns: 1fr 1fr; }
+    .proj-grid, .footer-grid { grid-template-columns: 1fr; }
+    .pipe-row::before { display: none; }
+    nav .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .uc-grid, .metrics-grid, .team-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <rect width="28" height="28" rx="7" fill="#2e7d32"/>
+      <path d="M8 14l4 4 8-8" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Safaricom <span class="dot">DataSci</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#usecases">Use Cases</a></li>
+    <li><a href="#pipeline">Pipeline</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+  <button class="nav-cta">Join the Team ↗</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-content">
+    <div class="hero-eyebrow"><span></span> Data Intelligence · Nairobi, Kenya</div>
+    <h1>
+      Turning <span class="accent">500M+</span> data<br>
+      points into <span class="underline-red">impact</span><br>
+      across Africa
+    </h1>
+    <p class="hero-desc">
+      Safaricom's Data Science team builds machine learning systems, analytics platforms, and AI-driven insights powering M-Pesa, network operations, and customer experience at scale.
+    </p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">Explore Projects</a>
+      <a href="#pipeline" class="btn-outline">Our Methodology</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="stat-card">
+      <div class="stat-icon icon-green">📡</div>
+      <div>
+        <div class="stat-num">47M+</div>
+        <div class="stat-label">Active subscribers modeled monthly</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon icon-red">💸</div>
+      <div>
+        <div class="stat-num">KES 2.6T</div>
+        <div class="stat-label">M-Pesa transactions analyzed per year</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon icon-green">🌍</div>
+      <div>
+        <div class="stat-num">97%</div>
+        <div class="stat-label">Network coverage optimized by ML</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="usecases" id="usecases">
+  <p class="section-label">What we solve</p>
+  <h2 class="section-title">Data science across every vertical</h2>
+  <p class="section-sub">From fraud detection to tower placement, our models run in production across Safaricom's core business units.</p>
+  <div class="uc-grid">
+    <div class="uc-card c1">
+      <div class="uc-emoji">🛡️</div>
+      <h3>Fraud Detection</h3>
+      <p>Real-time anomaly detection on M-Pesa transactions using gradient boosting and graph neural networks to flag suspicious patterns in milliseconds.</p>
+    </div>
+    <div class="uc-card c2">
+      <div class="uc-emoji">📶</div>
+      <h3>Network Optimisation</h3>
+      <p>Predictive models for base station load balancing, capacity planning, and QoS degradation alerts using time-series forecasting and RL agents.</p>
+    </div>
+    <div class="uc-card c3">
+      <div class="uc-emoji">🔄</div>
+      <h3>Churn Prediction</h3>
+      <p>Survival analysis and SHAP-driven explainability to identify at-risk customers 30 days ahead — enabling personalised retention interventions.</p>
+    </div>
+    <div class="uc-card c4">
+      <div class="uc-emoji">💡</div>
+      <h3>Credit Scoring</h3>
+      <p>Alternative credit scoring for the unbanked using mobile money behaviour, recharge patterns, and social graph features powering M-Shwari and Fuliza.</p>
+    </div>
+    <div class="uc-card c5">
+      <div class="uc-emoji">🗺️</div>
+      <h3>Geospatial Analytics</h3>
+      <p>Satellite imagery, GPS mobility data, and H3 hexagonal indexing to guide tower expansion, retail placement, and digital financial inclusion mapping.</p>
+    </div>
+    <div class="uc-card c6">
+      <div class="uc-emoji">🤖</div>
+      <h3>Conversational AI</h3>
+      <p>Swahili and English NLP models for Zuri chatbot — handling 2M+ customer queries per month with intent classification and dialogue management.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PIPELINE -->
+<section class="pipeline" id="pipeline">
+  <p class="section-label">Methodology</p>
+  <h2 class="section-title">From raw signal to production model</h2>
+  <p class="section-sub">A rigorous five-stage pipeline ensures every model ships with clear business value, documented biases, and monitored performance.</p>
+  <div class="pipe-row">
+    <div class="pipe-step">
+      <div class="pipe-circle">🗄️</div>
+      <h4>Ingest & Store</h4>
+      <p>Kafka streams, HDFS, BigQuery, real-time CDC pipelines</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-circle">🧹</div>
+      <h4>Clean & Feature</h4>
+      <p>dbt transformations, Feast feature store, PII masking</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-circle">🔬</div>
+      <h4>Experiment</h4>
+      <p>MLflow tracking, Jupyter, A/B hypothesis testing</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-circle">🚀</div>
+      <h4>Deploy</h4>
+      <p>Docker + Kubernetes, Vertex AI, shadow-mode validation</p>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-circle">📊</div>
+      <h4>Monitor</h4>
+      <p>Data drift alerts, Grafana dashboards, SHAP audits</p>
+    </div>
+  </div>
+</section>
+
+<!-- METRICS -->
+<section class="metrics">
+  <p class="section-label">Impact numbers</p>
+  <h2 class="section-title">Measurable outcomes, not vanity metrics</h2>
+  <p class="section-sub">Every model is tied to a business KPI tracked continuously in production.</p>
+  <div class="metrics-grid">
+    <div class="metric-tile">
+      <div class="metric-val">98.7%</div>
+      <div class="metric-label">Fraud detection precision on M-Pesa</div>
+      <div class="metric-change">↑ 3.2% vs previous model</div>
+    </div>
+    <div class="metric-tile">
+      <div class="metric-val">34%</div>
+      <div class="metric-label">Reduction in customer churn rate</div>
+      <div class="metric-change">↑ 12pp improvement YoY</div>
+    </div>
+    <div class="metric-tile">
+      <div class="metric-val">2.1M</div>
+      <div class="metric-label">Monthly Zuri chatbot interactions</div>
+      <div class="metric-change">↑ 41% growth this quarter</div>
+    </div>
+    <div class="metric-tile">
+      <div class="metric-val">KES 4B</div>
+      <div class="metric-label">Revenue protected via fraud models</div>
+      <div class="metric-change">↑ 18% vs 2023 baseline</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects" id="projects">
+  <p class="section-label">Current work</p>
+  <h2 class="section-title">What we're building right now</h2>
+  <p class="section-sub">A snapshot of active projects across research, pilots, and production-deployed systems.</p>
+  <div class="proj-grid">
+    <div class="proj-card">
+      <span class="proj-tag live">🟢 Live in Production</span>
+      <h3>M-Pesa Fraud Graph Network</h3>
+      <p>Graph neural network detecting money-mule rings and SIM-swap fraud by modelling transaction topology. Running on 14M daily transactions with sub-50ms latency.</p>
+      <div class="proj-stack">
+        <span class="chip">PyG</span><span class="chip">Kafka</span><span class="chip">Redis</span><span class="chip">Kubernetes</span>
+      </div>
+    </div>
+    <div class="proj-card">
+      <span class="proj-tag research">🔵 Research Phase</span>
+      <h3>LLM-Powered Swahili NLU</h3>
+      <p>Fine-tuning a bilingual transformer on Kenyan Swahili + Sheng to improve intent recognition for Zuri. Exploring low-resource techniques with Safaricom's proprietary corpus.</p>
+      <div class="proj-stack">
+        <span class="chip">HuggingFace</span><span class="chip">PyTorch</span><span class="chip">Swahili NLP</span>
+      </div>
+    </div>
+    <div class="proj-card">
+      <span class="proj-tag pilot">🟡 Pilot</span>
+      <h3>Geospatial Coverage Optimiser</h3>
+      <p>Combining population density grids, competitor presence, and demand forecasts to recommend optimal 5G tower placement across Rift Valley and Coast regions.</p>
+      <div class="proj-stack">
+        <span class="chip">H3</span><span class="chip">GeoPandas</span><span class="chip">LightGBM</span><span class="chip">QGIS</span>
+      </div>
+    </div>
+    <div class="proj-card">
+      <span class="proj-tag live">🟢 Live in Production</span>
+      <h3>Fuliza Real-Time Limit Engine</h3>
+      <p>Dynamic credit limit engine updating M-Pesa overdraft limits hourly based on recency, frequency, and monetary features — serving 22M eligible customers.</p>
+      <div class="proj-stack">
+        <span class="chip">XGBoost</span><span class="chip">Feast</span><span class="chip">BigQuery</span><span class="chip">Vertex AI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team" id="team">
+  <p class="section-label">The people</p>
+  <h2 class="section-title">Meet the data team</h2>
+  <p class="section-sub">A team of 60+ data scientists, engineers, and analysts embedded across product, finance, and network divisions.</p>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="avatar av1">AK</div>
+      <div>
+        <div class="team-name">Amina Kariuki</div>
+        <div class="team-role">Head of Data Science</div>
+        <div class="team-bio">Leads ML strategy across Safaricom. Previously at Google Brain Nairobi. PhD, University of Cape Town.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="avatar av2">JO</div>
+      <div>
+        <div class="team-name">James Otieno</div>
+        <div class="team-role">Principal ML Engineer</div>
+        <div class="team-bio">Architect of the M-Pesa fraud pipeline. Specialist in graph neural networks and real-time inference systems.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="avatar av3">FK</div>
+      <div>
+        <div class="team-name">Fatuma Kimani</div>
+        <div class="team-role">NLP Research Lead</div>
+        <div class="team-bio">Building multilingual models for Swahili and Sheng. Co-author of the AfriNLP benchmark datasets.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="avatar av4">BM</div>
+      <div>
+        <div class="team-name">Brian Mwangi</div>
+        <div class="team-role">Data Engineering Manager</div>
+        <div class="team-bio">Owns the data lake and feature store. 10 years building telco data platforms across East Africa.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="avatar av5">GN</div>
+      <div>
+        <div class="team-name">Grace Njoroge</div>
+        <div class="team-role">Credit Risk Data Scientist</div>
+        <div class="team-bio">Builds alternative credit scoring models for M-Shwari and Fuliza. MSc Statistics, University of Nairobi.</div>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="avatar av6">DW</div>
+      <div>
+        <div class="team-name">David Waweru</div>
+        <div class="team-role">Geospatial Analyst</div>
+        <div class="team-bio">Maps digital inclusion gaps and guides network expansion using satellite imagery and mobility data.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Safaricom DataSci</div>
+      <p class="footer-desc">Building the data and AI foundation for Kenya and East Africa's digital economy. Transforming lives through the bold, creative, and responsible use of technology.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Explore</h5>
+      <ul>
+        <li><a href="#usecases">Use Cases</a></li>
+        <li><a href="#pipeline">Methodology</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#team">Team</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Resources</h5>
+      <ul>
+        <li><a href="#">Open Datasets</a></li>
+        <li><a href="#">Research Papers</a></li>
+        <li><a href="#">Tech Blog</a></li>
+        <li><a href="#">GitHub</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Company</h5>
+      <ul>
+        <li><a href="#">About Safaricom</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Sustainability</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Safaricom PLC · Data Science Division · Nairobi, Kenya</p>
+    <span class="badge">🌍 Transforming Lives</span>
+  </div>
+</footer>
+
+</body>
+</html>
